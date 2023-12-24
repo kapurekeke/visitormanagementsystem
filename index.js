@@ -33,9 +33,6 @@ const db = client.db('vms');
 const adminCollection = db.collection ('admin');
 const visitorCollection = db.collection ('visitor');
 const prisonerCollection = db.collection('prisoner');
-const cellCollection = db.collection('cell');
-const emergencyCollection = db.collection('emergencycontact');
-const casedetailCollection = db.collection('casedetail');
 
 /**login admin function*/
 async function login(reqUsername, reqPassword) {
@@ -214,6 +211,11 @@ app.get('/prisoner', async (req, res) => {
 const options = {
     definition: {
         openapi: '3.0.0',
+        servers: [
+            {
+              url: 'https://vmsprison.azurewebsites.net',
+            },
+          ],          
         info: {
             title: 'VMS API',
             version: '1.0.0',

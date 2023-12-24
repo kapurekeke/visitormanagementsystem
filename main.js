@@ -71,4 +71,55 @@
  *         description: Internal server error
  */
 
-
+/**
+ * @swagger
+ * /createvisitorData:
+ *   post:
+ *     summary: Add a visitor
+ *     tags: [Visitor]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       description: Visitor data to be added
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Visitor's name
+ *               icnumber:
+ *                 type: string
+ *                 description: Visitor's IC number
+ *               relationship:
+ *                 type: string
+ *                 description: Relationship with the prisoner
+ *               prisonerId:
+ *                 type: string
+ *                 description: ID of the prisoner
+ *             required:
+ *               - name
+ *               - icnumber
+ *               - relationship
+ *               - prisonerId
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             example:
+ *               name: John Doe
+ *               icnumber: 123456789
+ *               relationship: Family
+ *               prisonerId: ABC123
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: An error occurred while creating the visitor
+ *     security:
+ *       - BearerAuth: []
+ */

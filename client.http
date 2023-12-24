@@ -24,34 +24,29 @@ Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDlhNDQ2ZG
 
 {
     "name": "Sarah Jose",
-    "city": "Melbourne",
+    "icnumber": "124524985563",
     "relationship": "aunt",
-    "visitorId": "008"
+    "prisonerId": "5512"
   
 }
 ###
-
-
-GET http://localhost:3000/admins
-Content-Type: application/json
 ###
+POST https://vmsprison.azurewebsites.net/addprisoner
+Content-Type: application/json
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDlhNDQ2ZGM1OTA0ZWE0NDdmM2FhZGIiLCJ1c2VybmFtZSI6Ik1pa2F5bGEiLCJwYXNzd29yZCI6IktheWxhMTIzIiwiaWF0IjoxNjg3ODMyNDAyfQ.Y1d8y_KJKQGBUvBJQNpczMLWnYtZGNfsjGRlhb7mZj0
 
-GET https://vmsprison.azurewebsites.net/visitor
+{
+    "name": "Harry Jose",
+    "icnumber": "766453890034",
+    "prisonerId": "5512"
+  
+}
+###
+###
+GET https://vmsprison.azurewebsites.net/visitors
 Content-Type: application/json
 ###
 
 GET https://vmsprison.azurewebsites.net/prisoner
-Content-Type: application/json
-###
-
-GET http://localhost:3000/cell
-Content-Type: application/json
-###
-
-GET http://localhost:3000/emergency
-Content-Type: application/json
-###
-
-GET http://localhost:3000/casedetail
 Content-Type: application/json
 ###
