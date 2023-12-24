@@ -167,8 +167,8 @@ app.post('/createvisitorData', verifyToken, (req, res) => {
 // View all visitors
 app.get('/visitors', async (req, res) => {
     try {
-      const db = client.db('PRISON_VMS');
-      const prisoner = await db.collection('VISITOR').find().toArray();
+      const db = client.db('vms');
+      const prisoner = await db.collection('vms').find().toArray();
       res.send(prisoner);
     } catch (error) {
       res.status(500).send('Error viewing visitors');
@@ -178,8 +178,8 @@ app.get('/visitors', async (req, res) => {
 // View all prisoner
 app.get('/prisoner', async (req, res) => {
     try {
-      const db = client.db('PRISON_VMS');
-      const prisoner = await db.collection('PRISONER').find().toArray();
+      const db = client.db('vms');
+      const prisoner = await db.collection('prisoner').find().toArray();
       res.send(prisoner);
     } catch (error) {
       res.status(500).send('Error viewing prisoner');
