@@ -80,7 +80,7 @@ function generateToken(userData) {
     return token
   
 }
-
+/*
 function verifyToken(req, res, next) {
     let header = req.headers.authorization;
     console.log(header);
@@ -96,6 +96,37 @@ function verifyToken(req, res, next) {
       next();
     });
 }
+*/
+
+function verifyToken(req, res, next) {
+    let header = req.headers.authorization;
+  
+    // Check if the Authorization header is present
+    if (!header) {
+      return res.status(401).send('Authorization header is missing');
+    }
+  
+    console.log(header);
+  
+    // Split the header to extract the token
+    let tokenParts = header.split(' ');
+  
+    // Check if the expected token format is present
+    if (tokenParts.length !== 2 || tokenParts[0].toLowerCase() !== 'bearer') {
+      return res.status(401).send('Invalid Authorization header format');
+    }
+  
+    let token = tokenParts[1];
+  
+    jwt.verify(token, 'inipassword', function (err, decoded) {
+      if (err) {
+        return res.status(401).send('Invalid Token');
+      }
+  
+      req.user = decoded;
+      next();
+    });
+  }
 
 app.get('/', (req, res) => {
    res.send('Hello World!')
