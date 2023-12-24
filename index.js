@@ -214,15 +214,9 @@ app.get('/prisoner', async (req, res) => {
 const options = {
     definition: {
         openapi: '3.0.0',
-        servers: [
-            {
-                url: 'http://localhost:3000',
-            },
-        ],
         info: {
             title: 'VMS API',
             version: '1.0.0',
-            description: 'VMS API',
         },
     },
     apis: ['./main.js'],
