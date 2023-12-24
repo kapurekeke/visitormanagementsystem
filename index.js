@@ -168,7 +168,7 @@ app.post('/createvisitorData', verifyToken, (req, res) => {
 app.get('/visitors', async (req, res) => {
     try {
       const db = client.db('vms');
-      const prisoner = await db.collection('vms').find().toArray();
+      const prisoner = await db.collection('visitor').find().toArray();
       res.send(prisoner);
     } catch (error) {
       res.status(500).send('Error viewing visitors');

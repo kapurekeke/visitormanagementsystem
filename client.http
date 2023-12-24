@@ -3,22 +3,22 @@ POST https://vmsprison.azurewebsites.net/register
 Content-Type: application/json
 
 {
-  "username": "Mikayla",
-  "password": "Kayla123"
+  "username": "jim",
+  "password": "123"
 }
 
 ###
-POST http://localhost:3000/login
+POST https://vmsprison.azurewebsites.net/login
 Content-Type: application/json
 
 {
-  "username": "Mikayla",
-  "password": "Kayla123"
+  "username": "jim",
+  "password": "123"
 }
 ###
 
 ###
-POST http://localhost:3000/createvisitorData
+POST https://vmsprison.azurewebsites.net/createvisitorData
 Content-Type: application/json
 Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDlhNDQ2ZGM1OTA0ZWE0NDdmM2FhZGIiLCJ1c2VybmFtZSI6Ik1pa2F5bGEiLCJwYXNzd29yZCI6IktheWxhMTIzIiwiaWF0IjoxNjg3ODMyNDAyfQ.Y1d8y_KJKQGBUvBJQNpczMLWnYtZGNfsjGRlhb7mZj0
 
@@ -31,29 +31,16 @@ Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDlhNDQ2ZG
 }
 ###
 
-PATCH  http://localhost:3000/updatevisitor/649a476a418f91102380abe6
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDk3Mzc5YjI0OWQ5ZTNmYzdlZDQ4ZTUiLCJ1c2VybmFtZSI6Ik1pa2F5bGEiLCJwYXNzd29yZCI6IktheWxhMTIzIiwiaWF0IjoxNjg3NjM1MDg1fQ.XP_Lhl8zP_LQW_edNNcHH6xG950qsnJAOTquu0Qo9ek
-
-{
-  "city": "Texas"
-}
-
-###
-DELETE  http://localhost:3000/deletevisitor/649a476a418f91102380abe6
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDk3Mzc5YjI0OWQ5ZTNmYzdlZDQ4ZTUiLCJ1c2VybmFtZSI6Ik1pa2F5bGEiLCJwYXNzd29yZCI6IktheWxhMTIzIiwiaWF0IjoxNjg3NjM1MDg1fQ.XP_Lhl8zP_LQW_edNNcHH6xG950qsnJAOTquu0Qo9ek
-###
 
 GET http://localhost:3000/admins
 Content-Type: application/json
 ###
 
-GET http://localhost:3000/visitors
+GET https://vmsprison.azurewebsites.net/visitor
 Content-Type: application/json
 ###
 
-GET http://localhost:3000/prisoner
+GET https://vmsprison.azurewebsites.net/prisoner
 Content-Type: application/json
 ###
 
