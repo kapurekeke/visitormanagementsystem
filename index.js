@@ -45,7 +45,7 @@ const options = {
         openapi: '3.0.0',
         servers: [
             {
-                url: 'https://vmsprison.azurewebsites.net/',
+                url: 'http://localhost:3000',
             },
         ],
         info: {
@@ -54,6 +54,7 @@ const options = {
             description: 'VMS API',
         },
     },
+    apis: ['.index.js'],
 };
 
 const specs = swaggerjsdoc(options);
