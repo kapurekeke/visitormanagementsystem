@@ -71,6 +71,15 @@
  *         description: Internal server error
  */
 
+
+/**
+ * @swagger
+ * tags:
+ *   name: Visitor
+ *   description: Operations related to visitors
+ */
+
+
 /**
  * @swagger
  * /createvisitorData:
