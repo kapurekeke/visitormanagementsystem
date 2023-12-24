@@ -17,6 +17,15 @@
  *     description: Visitor operations
  *   - name: Prisoner
  *     description: Prisoner operations
+ * 
+ * securityDefinitions:
+ *   BearerAuth:
+ *     type: apiKey
+ *     in: header
+ *     name: Authorization
+ * 
+ * security:
+ *   - BearerAuth: []
  */
 
 /**
