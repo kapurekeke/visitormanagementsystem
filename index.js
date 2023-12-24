@@ -141,16 +141,16 @@ app.post('/register', (req, res) => {
 app.post('/createvisitorData', verifyToken, (req, res) => {
     const {
       name,
-      city,
+      icnumber,
       relationship,
-      visitorId
+      prisonerId
     } = req.body;
   
     const visitorData = {
       name,
-      city,
+      icnumber,
       relationship,
-      visitorId
+      prisonerId
     };
   
     visitorCollection
@@ -161,6 +161,31 @@ app.post('/createvisitorData', verifyToken, (req, res) => {
       .catch((error) => {
         console.error('Error creating visitor:', error);
         res.status(500).send('An error occurred while creating the visitor');
+      });
+});
+
+// Add a prisoner
+app.post('/addprisoner', verifyToken, (req, res) => {
+    const {
+      name,
+      icnumber,
+      prisonerId
+    } = req.body;
+  
+    const prisonerData = {
+      name,
+      icnumber,
+      prisonerId
+    };
+  
+    prisonerCollection
+      .insertOne(prisonerData)
+      .then(() => {
+        res.send(prisonerData);
+      })
+      .catch((error) => {
+        console.error('Error creating prisoner:', error);
+        res.status(500).send('An error occurred while creating the prisoner');
       });
 });
 
