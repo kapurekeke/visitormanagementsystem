@@ -1,14 +1,4 @@
 /**
- * @openapi
- * components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- */
-
-/**
  * @swagger
  * tags:
  *   - name: Auth
@@ -71,15 +61,6 @@
  *         description: Internal server error
  */
 
-
-/**
- * @swagger
- * tags:
- *   name: Visitor
- *   description: Operations related to visitors
- */
-
-
 /**
  * @swagger
  * /createvisitorData:
@@ -89,7 +70,6 @@
  *     security:
  *       - BearerAuth: []
  *     requestBody:
- *       description: Visitor data to be added
  *       required: true
  *       content:
  *         application/json:
@@ -98,37 +78,74 @@
  *             properties:
  *               name:
  *                 type: string
- *                 description: Visitor's name
  *               icnumber:
  *                 type: string
- *                 description: Visitor's IC number
  *               relationship:
  *                 type: string
- *                 description: Relationship with the prisoner
  *               prisonerId:
  *                 type: string
- *                 description: ID of the prisoner
- *             required:
- *               - name
- *               - icnumber
- *               - relationship
- *               - prisonerId
  *     responses:
- *       '200':
- *         description: Successful operation
- *         content:
- *           application/json:
- *             example:
- *               name: John Doe
- *               icnumber: 123456789
- *               relationship: Family
- *               prisonerId: ABC123
- *       '500':
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             example:
- *               error: An error occurred while creating the visitor
+ *       200:
+ *         description: Visitor added successfully
+ *       401:
+ *         description: Unauthorized - Invalid token
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /addprisoner:
+ *   post:
+ *     summary: Add a prisoner
+ *     tags: [Prisoner]
  *     security:
  *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               icnumber:
+ *                 type: string
+ *               prisonerId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Prisoner added successfully
+ *       401:
+ *         description: Unauthorized - Invalid token
+ *       500:
+ *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /visitors:
+ *   get:
+ *     summary: View all visitors
+ *     tags: [Visitor]
+ *     responses:
+ *       200:
+ *         description: List of visitors
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /prisoner:
+ *   get:
+ *     summary: View all prisoners
+ *     tags: [Prisoner]
+ *     responses:
+ *       200:
+ *         description: List of prisoners
+ *       500:
+ *         description: Internal server error
+ */
+
