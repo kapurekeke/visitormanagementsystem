@@ -9,7 +9,7 @@ const swaggerjsdoc = require('swagger-jsdoc');
 app.use(express.json())
 
 // MongoDB connection URL
-const uri = "mongodb+srv://b022120050:hazim12345@cluster0.gsshthc.mongodb.net/";
+const uri = "mongodb+srv://hajimu69:KnKHaJim01@cluster1.gljgb6e.mongodb.net/";
 
 // Create a new MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }, {serverApi:
@@ -200,7 +200,7 @@ const options = {
             description: 'VMS API',
         },
     },
-    apis: ['.index.js'],
+    apis: ['./main.js'],
 };
 
 const specs = swaggerjsdoc(options);
