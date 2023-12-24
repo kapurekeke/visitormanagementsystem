@@ -231,7 +231,7 @@ const options = {
             },
           ],          
         info: {
-            title: 'VMS API',
+            title: 'VMS PRISON API',
             version: '1.0.0',
         },
     },
