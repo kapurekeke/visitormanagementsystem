@@ -1,14 +1,23 @@
 /**
+ * @openapi
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
+/**
  * @swagger
  * tags:
  *   - name: Auth
  *     description: Authentication operations
- *   - name: Admin
- *     description: Admin operations
  *   - name: Visitor
  *     description: Visitor operations
  *   - name: Prisoner
  *     description: Prisoner operations
+ * 
  */
 
 /**
@@ -63,8 +72,19 @@
 
 /**
  * @swagger
- * /createvisitorData:
- *   post:
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ * 
+ * security:
+ *   - BearerAuth: []
+ * 
+ * paths:
+ *  /createvisitorData:
+ *    post:
  *     summary: Add a visitor
  *     tags: [Visitor]
  *     security:

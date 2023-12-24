@@ -80,23 +80,6 @@ function generateToken(userData) {
     return token
   
 }
-/*
-function verifyToken(req, res, next) {
-    let header = req.headers.authorization;
-    console.log(header);
-  
-    let token = header.split(' ')[1];
-  
-    jwt.verify(token, 'inipassword', function (err, decoded) {
-      if (err) {
-        res.send('Invalid Token');
-      }
-  
-      req.user = decoded;
-      next();
-    });
-}
-*/
 
 function verifyToken(req, res, next) {
     let header = req.headers.authorization;
