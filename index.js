@@ -152,6 +152,7 @@ app.post('/login', (req, res) => {
       if (response.success) {
         let token = generateToken(response.users);
         res.send("Auth Token: " + token);
+        res.send(result)
       } else {
         res.status(401).send(response.message);
       }
