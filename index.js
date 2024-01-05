@@ -66,13 +66,13 @@ async function visitorspass(reqicnum) {
 
     if (!matchedUser) {
       return {
-        success: false,
-        message: "Visitor pass not found!"
+        success: true,
+        message: matchedUser
       };
     } else {
       return {
-        success: true,
-        user: matchedUser
+        success: false,
+        user: "Visitor pass not found!"
       };
     }
   } catch (error) {
