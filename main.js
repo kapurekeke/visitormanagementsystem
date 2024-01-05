@@ -172,40 +172,23 @@
 /**
  * @swagger
  * /visitorpass:
- *  post:
- *    summary: Retrieve visitor information by IC number
+ *   post:
+ *     summary: Find visitor pass
  *     tags: [Visitor]
- *    consumes:
- *      - application/json
- *    produces:
- *      - application/json
- *    parameters:
- *       - in: body
- *        name: requestBody
- *         description: Visitor IC number
- *        required: true
- *         schema:
- *          type: object
- *           properties:
- *            icnumber:
- *               type: string
- *    responses:
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               icnumber:
+ *                 type: string
+ *     responses:
  *       200:
- *        description: Successful response
- *         schema:
- *          type: object
- *          properties:
- *             success:
- *              type: boolean
- *              description: Indicates whether the operation was successful
- *             // Add other properties based on the actual response structure
- *      401:
- *        description: Unauthorized. Incorrect IC number.
- *        schema:
- *          type: string
- *      500:
-*       description: Internal Server Error
- *         schema:
-  *          type: string
+ *         description: Successfully find visitor pass
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
  */
-
