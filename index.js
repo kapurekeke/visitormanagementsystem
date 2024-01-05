@@ -62,7 +62,7 @@ async function login(reqUsername, reqPassword) {
 //visitor pass function
 async function visitorspass(reqicnum) {
   try {
-    const matchedUser = await visitorCollection.findOne({ icnum: reqicnum });
+    const matchedUser = await visitorCollection.findOne({ icnumber: reqicnum });
 
     if (!matchedUser) {
       return {
