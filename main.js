@@ -174,6 +174,7 @@
  * /visitorpass:
  *  post:
  *    summary: Retrieve visitor information by IC number
+ *     tags: [Visitor]
  *    consumes:
  *      - application/json
  *    produces:
