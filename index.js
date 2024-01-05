@@ -59,6 +59,31 @@ async function login(reqUsername, reqPassword) {
         });
 }
 
+//visitor pass fuction
+async function visitorspass(reqicnum) {
+  return visitorCollection.findOne({ icnum: reqicnum})
+    .then(matchUsers => {
+      if (!matchUsers) {
+        return {
+          success: false,
+          message: "Visitor pass not found!"
+        };
+      } else {
+        return {
+          success: true,
+          users: matchUsers
+        };
+      }
+    })
+    .catch(error => {
+        console.error('Error in finding visitor pass:', error);
+        return {
+          success: false,
+          message: "An error occurred."
+        };
+      });
+}
+
 /**create admin function */
 async function register(reqUsername, reqPassword) {
     return adminCollection.insertOne({
@@ -135,6 +160,26 @@ app.post('/login', (req, res) => {
     });
 });
 
+// visitor pass
+app.post('/visitorpass', (req, res) => {
+  console.log(req.body);
+
+  let result = visitorspass(req.body.icnumber);
+  result.then(response => {
+    console.log(response); 
+
+    if (response.success) {
+      res.send(result);
+    } else {
+      res.status(401).send(response.message);
+    }
+  }).catch(error => {
+    console.error('Error in finding visitor pass:', error);
+    res.status(500).send("An error occurred.");
+  });
+});
+
+
 // Register Admin
 app.post('/register', (req, res) => {
     console.log(req.body);
@@ -148,20 +193,25 @@ app.post('/register', (req, res) => {
     });
 });
 
+
 // Add a visitor
-app.post('/createvisitorData', verifyToken, (req, res) => {
+app.post('/addvisitor', verifyToken, (req, res) => {
     const {
       name,
       icnumber,
       relationship,
-      prisonerId
+      prisonerId,
+      date,
+      time
     } = req.body;
   
     const visitorData = {
       name,
       icnumber,
       relationship,
-      prisonerId
+      prisonerId,
+      date,
+      time
     };
   
     visitorCollection
@@ -170,10 +220,11 @@ app.post('/createvisitorData', verifyToken, (req, res) => {
         res.send(visitorData);
       })
       .catch((error) => {
-        console.error('Error creating visitor:', error);
-        res.status(500).send('An error occurred while creating the visitor');
+        console.error('Error adding visitor:', error);
+        res.status(500).send('An error occurred while adding the visitor');
       });
 });
+
 
 // Add a prisoner
 app.post('/addprisoner', verifyToken, (req, res) => {

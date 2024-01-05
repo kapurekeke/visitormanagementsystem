@@ -169,3 +169,42 @@
  *         description: Internal server error
  */
 
+/**
+ * @swagger
+ * /visitorpass:
+ *  post:
+ *    summary: Retrieve visitor information by IC number
+ *    consumes:
+ *      - application/json
+ *    produces:
+ *      - application/json
+ *    parameters:
+ *       - in: body
+ *        name: requestBody
+ *         description: Visitor IC number
+ *        required: true
+ *         schema:
+ *          type: object
+ *           properties:
+ *            icnumber:
+ *               type: string
+ *    responses:
+ *       200:
+ *        description: Successful response
+ *         schema:
+ *          type: object
+ *          properties:
+ *             success:
+ *              type: boolean
+ *              description: Indicates whether the operation was successful
+ *             // Add other properties based on the actual response structure
+ *      401:
+ *        description: Unauthorized. Incorrect IC number.
+ *        schema:
+ *          type: string
+ *      500:
+*       description: Internal Server Error
+ *         schema:
+  *          type: string
+ */
+
