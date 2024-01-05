@@ -64,7 +64,7 @@ async function visitorspass(reqicnum) {
   try {
     const matchedUser = await visitorCollection.findOne({ icnumber: reqicnum });
 
-    if (!matchedUser) {
+    if (matchedUser) {
       return {
         success: true,
         message: matchedUser
