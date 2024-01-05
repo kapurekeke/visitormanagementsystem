@@ -162,22 +162,16 @@ app.post('/login', (req, res) => {
 });
 
 // visitor pass
-app.post('/visitorpass', (req, res) => {
-  console.log(req.body);
+// API endpoint for visitors pass
+app.get('/visitorspass/:icnum', async (req, res) => {
+  const { icnum } = req.params;
 
-  let result = visitorspass(req.body.icnumber);
-  result.then(response => {
-    console.log(response); 
-
-    if (response.success) {
-      res.send(result);
-    } else {
-      res.status(401).send(response.message);
-    }
-  }).catch(error => {
-    console.error('Error in finding visitor pass:', error);
-    res.status(500).send("An error occurred.");
-  });
+  try {
+    const result = await visitorspass(icnum);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 

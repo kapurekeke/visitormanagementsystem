@@ -171,24 +171,38 @@
 
 /**
  * @swagger
- * /visitorpass:
- *   post:
- *     summary: Find visitor pass
- *     tags: [Visitor]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               icnumber:
- *                 type: string
- *     responses:
- *       200:
- *         description: Successfully find visitor pass
- *       401:
- *         description: Invalid credentials
- *       500:
- *         description: Internal server error
+ * /visitorspass/{icnum}:
+ *   get:
+ *      summary: Get Visitor Pass Information
+ *      tags: [Visitor]
+ *    parameters:
+ *       - in: path
+ *         name: icnum
+ *         required: true
+ *         schema:
+ *           type: string
+ *        description: The IC number of the visitor pass
+ *   responses:
+ *    '200':
+ *     description: Successful response
+ *    content:
+ *     application/json:
+ *      example:
+ *       success: true
+ *      user:
+ *       // Your user data structure here
+ *       '404':
+ *        description: Visitor pass not found
+ *         content:
+ *          application/json:
+ *             example:
+ *              success: false
+ *               message: Visitor pass not found!
+ *       '500':
+ *        description: Internal Server Error
+ *         content:
+ *           application/json:
+ *            example:
+ *               success: false
+ *              message: An error occurred.
  */
