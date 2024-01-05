@@ -173,36 +173,36 @@
  * @swagger
  * /visitorspass/{icnum}:
  *   post:
- *      summary: Get Visitor Pass Information
- *      tags: [Visitor]
- *    parameters:
+ *     summary: Get Visitor Pass Information
+ *     tags: [Visitor]
+ *     parameters:
  *       - in: path
  *         name: icnum
  *         required: true
  *         schema:
  *           type: string
- *        description: The IC number of the visitor pass
- *   responses:
- *    '200':
- *     description: Successful response
- *    content:
- *     application/json:
- *      example:
- *       success: true
- *      user:
- *       // Your user data structure here
- *       '404':
- *        description: Visitor pass not found
- *         content:
- *          application/json:
- *             example:
- *              success: false
- *               message: Visitor pass not found!
- *       '500':
- *        description: Internal Server Error
+ *         description: The IC number of the visitor pass
+ *     responses:
+ *       '200':
+ *         description: Successful response
  *         content:
  *           application/json:
- *            example:
+ *             example:
+ *               success: true
+ *               user:
+ *                 # Your user data structure here
+ *       '404':
+ *         description: Visitor pass not found
+ *         content:
+ *           application/json:
+ *             example:
  *               success: false
- *              message: An error occurred.
+ *               message: Visitor pass not found!
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: An error occurred.
  */
