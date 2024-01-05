@@ -163,7 +163,7 @@ app.post('/login', (req, res) => {
 
 // visitor pass
 // API endpoint for visitors pass
-app.get('/visitorspass/:icnum', async (req, res) => {
+app.post('/visitorspass/:icnum', async (req, res) => {
   const { icnum } = req.params;
 
   try {

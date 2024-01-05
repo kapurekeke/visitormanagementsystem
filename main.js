@@ -172,7 +172,7 @@
 /**
  * @swagger
  * /visitorspass/{icnum}:
- *   get:
+ *   post:
  *      summary: Get Visitor Pass Information
  *      tags: [Visitor]
  *    parameters:
