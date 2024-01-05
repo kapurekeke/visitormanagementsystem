@@ -137,9 +137,6 @@ function verifyToken(req, res, next) {
     });
   }
 
-app.get('/', (req, res) => {
-   res.send('Hello World!')
-})
 
 // Login Admin
 app.post('/login', (req, res) => {
@@ -152,7 +149,6 @@ app.post('/login', (req, res) => {
       if (response.success) {
         let token = generateToken(response.users);
         res.send("Auth Token: " + token);
-        res.send(result)
       } else {
         res.status(401).send(response.message);
       }
