@@ -59,30 +59,31 @@ async function login(reqUsername, reqPassword) {
         });
 }
 
-//visitor pass fuction
+//visitor pass function
 async function visitorspass(reqicnum) {
-  return visitorCollection.findOne({ icnum: reqicnum})
-    .then(matchUsers => {
-      if (!matchUsers) {
-        return {
-          success: false,
-          message: "Visitor pass not found!"
-        };
-      } else {
-        return {
-          success: true,
-          users: matchUsers
-        };
-      }
-    })
-    .catch(error => {
-        console.error('Error in finding visitor pass:', error);
-        return {
-          success: false,
-          message: "An error occurred."
-        };
-      });
+  try {
+    const matchedUser = await visitorCollection.findOne({ icnum: reqicnum });
+
+    if (!matchedUser) {
+      return {
+        success: false,
+        message: "Visitor pass not found!"
+      };
+    } else {
+      return {
+        success: true,
+        user: matchedUser
+      };
+    }
+  } catch (error) {
+    console.error('Error in finding visitor pass:', error);
+    return {
+      success: false,
+      message: "An error occurred."
+    };
+  }
 }
+
 
 /**create admin function */
 async function register(reqUsername, reqPassword) {
