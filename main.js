@@ -83,7 +83,7 @@
  *   - BearerAuth: []
  * 
  * paths:
- *  /createvisitorData:
+ *  /addvisitor:
  *    post:
  *     summary: Add a visitor
  *     tags: [Visitor]
@@ -103,6 +103,10 @@
  *               relationship:
  *                 type: string
  *               prisonerId:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *               time:
  *                 type: string
  *     responses:
  *       200:
@@ -149,6 +153,8 @@
  *   get:
  *     summary: View all visitors
  *     tags: [Visitor]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of visitors
