@@ -170,6 +170,8 @@
  *   get:
  *     summary: View all prisoners
  *     tags: [Prisoner]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of prisoners

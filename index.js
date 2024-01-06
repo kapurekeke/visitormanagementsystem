@@ -255,7 +255,7 @@ app.get('/visitors',verifyToken, async (req, res) => {
 });
 
 // View all prisoner
-app.get('/prisoner', async (req, res) => {
+app.get('/prisoner', verifyToken, async (req, res) => {
     try {
       const db = client.db('vms');
       const prisoner = await db.collection('prisoner').find().toArray();
