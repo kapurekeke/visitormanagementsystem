@@ -173,7 +173,7 @@ app.post('/visitorspass/:icnum', async (req, res) => {
 
 
 // Register Admin
-app.post('/register', (req, res) => {
+app.post('/register', verifyToken, (req, res) => {
     console.log(req.body);
   
     let result = register(req.body.username, req.body.password, req.body.name, req.body.email);

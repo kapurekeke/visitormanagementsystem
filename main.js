@@ -52,6 +52,8 @@
  *   post:
  *     summary: Register a new admin
  *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
