@@ -189,21 +189,23 @@ async function register(reqUsername, reqPassword) {
 
 //create visitor function
 async function visitorRegister(reqFirstName, reqLastName, reqPhoneNum, reqUsername, reqPassword) {
-  return visitorcredentialsCollection.insertOne({
-    firstName: reqFirstName,
-    lastName: reqLastName,
-    phoneNum: reqPhoneNum,
-    username: reqUsername,
-    password: reqPassword,
-  })
-  .then(() => {
-    return "Visitor registration successful!";
-  })
-  .catch(error => {
+  try {
+    await visitorcredentialsCollection.insertOne({
+      firstName: reqFirstName,
+      lastName: reqLastName,
+      phoneNum: reqPhoneNum,
+      username: reqUsername,
+      password: reqPassword,
+    });
+
+    // Return the username or user information after successful registration
+    return reqUsername;
+  } catch (error) {
     console.error('Visitor registration failed:', error);
-    return "Error encountered during visitor registration!";
-  });
+    throw new Error("Error encountered during visitor registration!");
+  }
 }
+
 
 function generateAdminToken(userData) {
   const token = jwt.sign(userData, 'adminSecretKey');
@@ -296,17 +298,28 @@ app.post('/login', (req, res) => {
 });
 
 //visitor register
-app.post('/registervisitor', (req, res) => {
-  console.log(req.body);
+app.post('/registervisitor', async (req, res) => {
+  try {
+    console.log(req.body);
 
-  let result = visitorRegister(req.body.firstName, req.body.lastName, req.body.phoneNum, req.body.username, req.body.password);
-  result.then(response => {
-    res.send(response);
-  }).catch(error => {
+    // Register the visitor and get the username
+    const username = await visitorRegister(req.body.firstName, req.body.lastName, req.body.phoneNum, req.body.username, req.body.password);
+
+    // Log in the visitor
+    const loginResult = await visitorLogin(username, req.body.password);
+
+    if (loginResult.success) {
+      const token = generateVisitorToken(loginResult.users);
+      res.send("Visitor Auth Token: " + token);
+    } else {
+      res.status(401).send(loginResult.message);
+    }
+  } catch (error) {
     console.error('Error in register route:', error);
     res.status(500).send("An error occurred during registration.");
-  });
+  }
 });
+
 
 //visitor login
 app.post('/loginvisitor', async(req, res) => {
