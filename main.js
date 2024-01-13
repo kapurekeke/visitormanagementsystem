@@ -78,8 +78,8 @@
  * @swagger
  * /loginvisitor:
  *   post:
- *     summary: Login as a visitor.
- *     tags: [Visitor]
+ *     summary: Visitor login endpoint
+ *     description: Logs in a visitor and returns an authentication token if successful.
  *     requestBody:
  *       required: true
  *       content:
@@ -89,32 +89,32 @@
  *             properties:
  *               username:
  *                 type: string
+ *                 description: The username of the visitor.
  *               password:
  *                 type: string
+ *                 description: The password of the visitor.
  *     responses:
  *       200:
- *         description: Successful login.
+ *         description: Successful login. Returns a visitor authentication token.
  *         content:
- *           application/json:
- *             example:
- *               success: true
- *               users:
- *                 username: visitor123
- *                 // Add other visitor details if needed
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Visitor Auth Token: <token>"
  *       401:
- *         description: Visitor not found or incorrect credentials.
+ *         description: Unauthorized. Invalid username or password.
  *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: Visitor not found or incorrect credentials.
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Invalid username or password."
  *       500:
- *         description: Internal server error.
+ *         description: Internal Server Error. An error occurred during login.
  *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: An error occurred during visitor login.
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "An error occurred during login."
  */
 
 /**
