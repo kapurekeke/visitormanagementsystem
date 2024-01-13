@@ -202,13 +202,6 @@ async function visitorRegister(reqFirstName, reqLastName, reqPhoneNum, reqUserna
     return "Error encountered during visitor registration!";
   });
 }
-/*
-function generateToken(userData) {
-    const token = jwt.sign(userData, 'inipassword');
-    return token
-  
-}
-*/
 
 function generateAdminToken(userData) {
   const token = jwt.sign(userData, 'adminSecretKey');
@@ -219,38 +212,6 @@ function generateVisitorToken(userData) {
   const token = jwt.sign(userData, 'visitorSecretKey');
   return token;
 }
-
-/*
-function verifyToken(req, res, next) {
-    let header = req.headers.authorization;
-  
-    // Check if the Authorization header is present
-    if (!header) {
-      return res.status(401).send('Authorization header is missing');
-    }
-  
-    console.log(header);
-  
-    // Split the header to extract the token
-    let tokenParts = header.split(' ');
-  
-    // Check if the expected token format is present
-    if (tokenParts.length !== 2 || tokenParts[0].toLowerCase() !== 'bearer') {
-      return res.status(401).send('Invalid Authorization header format');
-    }
-  
-    let token = tokenParts[1];
-  
-    jwt.verify(token, 'inipassword', function (err, decoded) {
-      if (err) {
-        return res.status(401).send('Invalid Token');
-      }
-  
-      req.user = decoded;
-      next();
-    });
-  }
-*/
 
 function verifyAdminToken(req, res, next) {
   let header = req.headers.authorization;
@@ -345,27 +306,8 @@ app.post('/registervisitor', (req, res) => {
   });
 });
 
-/*
 //visitor login
-app.post('/loginvisitor', async (req, res) => {
-  const { icnum } = req.params;
-
-  try {
-      const result = await loginVisitor(icnum);
-      if (result.success) {
-          let token = generateVisitorToken(result.visitor);
-          res.send("Visitor Auth Token: " + token);
-      } else {
-          res.status(401).send(result.message);
-      }
-  } catch (error) {
-      console.error('Error in visitor login route:', error);
-      res.status(500).send("An error occurred during visitor login.");
-  }
-});
-*/
-
-app.post('/loginvisitor', (req, res) => {
+app.post('/loginvisitor', async(req, res) => {
   console.log(req.body);
 
   let result = visitorLogin(req.body.username, req.body.password);
@@ -385,20 +327,8 @@ app.post('/loginvisitor', (req, res) => {
 });
 
 
-/*
+
 // visitor pass
-app.post('/visitorspass/:icnum', async (req, res) => {
-  const { icnum } = req.params;
-
-  try {
-    const result = await visitorspass(icnum);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
-});
-*/
-
 app.post('/visitorspass/:icnum', verifyVisitorToken, async (req, res) => {
   const { icnum } = req.params;
 

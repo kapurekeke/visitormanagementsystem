@@ -79,6 +79,7 @@
  * /loginvisitor:
  *   post:
  *     summary: Visitor login endpoint
+ *     tags: [Visitor]
  *     description: Logs in a visitor and returns an authentication token if successful.
  *     requestBody:
  *       required: true
