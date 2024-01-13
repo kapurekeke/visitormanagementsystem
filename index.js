@@ -147,15 +147,15 @@ async function approveVisitorPass(requestId, approvalStatus) {
 async function visitorLogin(reqUsername, reqPassword) {
   return visitorCollection.findOne({ username: reqUsername, password: reqPassword })
     .then(matchedUsers => {
-      if (!matchedUsers) {
-        return {
-          success: false,
-          message: "Visitor not found!",
-        };
-      } else {
+      if (matchedUsers) {
         return {
           success: true,
           users: matchedUsers,
+        };
+      } else {
+        return {
+          success: false,
+          message: "Visitor not found!",
         };
       }
     })
