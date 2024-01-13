@@ -34,6 +34,7 @@ const adminCollection = db.collection ('admin');
 const visitorCollection = db.collection ('visitor');
 const prisonerCollection = db.collection('prisoner');
 const visitorPassCollection = db.collection('visitorpass');
+const visitorcredentialsCollection = db.collection('visitorcredentials');
 
 /**login admin function*/
 async function login(reqUsername, reqPassword) {
@@ -146,7 +147,7 @@ async function approveVisitorPass(requestId, approvalStatus) {
 //visitor login function
 async function visitorLogin(reqUsername, reqPassword) {
   try {
-    const matchedUsers = await visitorCollection.findOne({ username: reqUsername, password: reqPassword });
+    const matchedUsers = await visitorcredentialsCollection.findOne({ username: reqUsername, password: reqPassword });
 
     if (!matchedUsers) {
       return {
@@ -188,7 +189,7 @@ async function register(reqUsername, reqPassword) {
 
 //create visitor function
 async function visitorRegister(reqFirstName, reqLastName, reqPhoneNum, reqUsername, reqPassword) {
-  return visitorCollection.insertOne({
+  return visitorcredentialsCollection.insertOne({
     firstName: reqFirstName,
     lastName: reqLastName,
     phoneNum: reqPhoneNum,
