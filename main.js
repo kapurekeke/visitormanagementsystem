@@ -269,43 +269,45 @@
  * @swagger
  * /visitorspass/{icnum}:
  *   post:
- *     summary: Get visitor pass details.
+ *     summary: Get visitor's pass information by IC number
+ *     description: Retrieve visitor's pass information using the provided IC number.
  *     tags: [VisitorPass]
- *     security:
- *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: icnum
- *         description: IC number of the visitor.
  *         required: true
+ *         description: The IC number of the visitor.
  *         schema:
  *           type: string
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: Visitor pass details retrieved successfully.
+ *         description: Successful operation
  *         content:
  *           application/json:
- *             example:
- *               success: true
- *               message:
- *                 status: pending
- *                 details:
- *                   icnumber: visitor123
- *                   // Add other visitor pass details if needed
- *       404:
- *         description: Visitor pass not found.
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: Visitor pass not found!
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates if the operation was successful.
+ *                 data:
+ *                   type: object
+ *                   description: The visitor's pass information.
  *       500:
- *         description: Internal server error.
+ *         description: Internal server error
  *         content:
  *           application/json:
- *             example:
- *               success: false
- *               message: An error occurred.
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates if the operation was unsuccessful.
+ *                 message:
+ *                   type: string
+ *                   description: Error message.
  */
 
 

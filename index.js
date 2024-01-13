@@ -345,6 +345,7 @@ app.post('/registervisitor', (req, res) => {
   });
 });
 
+/*
 //visitor login
 app.post('/loginvisitor', async (req, res) => {
   const { icnum } = req.params;
@@ -361,6 +362,26 @@ app.post('/loginvisitor', async (req, res) => {
       console.error('Error in visitor login route:', error);
       res.status(500).send("An error occurred during visitor login.");
   }
+});
+*/
+
+app.post('/loginvisitor', (req, res) => {
+  console.log(req.body);
+
+  let result = visitorLogin(req.body.username, req.body.password);
+  result.then(response => {
+    console.log(response); // Log the response received
+
+    if (response.success) {
+      let token = generateVisitorToken(response.users);
+      res.send("Visitor Auth Token: " + token);
+    } else {
+      res.status(401).send(response.message);
+    }
+  }).catch(error => {
+    console.error('Error in login route:', error);
+    res.status(500).send("An error occurred during login.");
+  });
 });
 
 
