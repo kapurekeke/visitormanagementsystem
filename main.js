@@ -72,6 +72,76 @@
  *         description: Internal server error
  */
 
+/** 
+ * @swagger
+ * /loginvisitor/{icnum}:
+ *    post:
+ *      summary: Visitor Login
+ *      tags: [Visitor]
+ *      description: Authenticate a visitor by IC number and generate a JWT token.
+ *      parameters:
+ *        - name: icnum
+ *          in: path
+ *          required: true
+ *          description: IC number of the visitor
+ *          schema:
+ *            type: string
+ *      responses:
+ *        '200':
+ *          description: Successful login
+ *          content:
+ *            application/json:
+ *              example:
+ *                success: true
+ *                message: Visitor login successful!
+ *                token: your_generated_token_here
+ *        '401':
+ *          description: Unauthorized
+ *          content:
+ *            application/json:
+ *              example:
+ *                success: false
+ *                message: Visitor not found!
+ *        '500':
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              example:
+ *                success: false
+ *                message: An error occurred during visitor login.
+ */
+
+/**
+ * @swagger
+ *  /registervisitor:
+ *    post:
+ *      summary: Visitor Registration
+ *      tags: [Visitor]
+ *      description: Register a new visitor.
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            example:
+ *              name: Visitor Name
+ *              icnumber: '123456789012'
+ *              relationship: Friend
+ *              prisonerId: PrisonerID123
+ *              date: '2024-01-15'
+ *              time: '14:30'
+ *      responses:
+ *        '200':
+ *          description: Successful registration
+ *          content:
+ *            application/json:
+ *              example: Visitor registration successful!
+ *        '500':
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              example: An error occurred during visitor registration.
+ */
+
 /**
  * @swagger
  * components:
@@ -183,7 +253,7 @@
  * @swagger
  * /visitorspass/{icnum}:
  *   post:
- *     summary: Get Visitor Pass Information
+ *     summary: Get Visitor Pass
  *     tags: [Visitor]
  *     parameters:
  *       - in: path

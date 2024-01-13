@@ -59,7 +59,7 @@ async function login(reqUsername, reqPassword) {
         });
 }
 
-//visitor pass function
+/*visitor pass function
 async function visitorspass(reqicnum) {
   try {
     const matchedUser = await visitorCollection.findOne({ icnumber: reqicnum });
@@ -83,6 +83,33 @@ async function visitorspass(reqicnum) {
     };
   }
 }
+*/
+
+//visitor login function
+async function loginVisitor(icnumber) {
+    try {
+        const matchedVisitor = await visitorCollection.findOne({ icnumber: icnumber });
+
+        if (matchedVisitor) {
+            return {
+                success: true,
+                message: "Visitor login successful!",
+                visitor: matchedVisitor
+            };
+        } else {
+            return {
+                success: false,
+                message: "Visitor not found!"
+            };
+        }
+    } catch (error) {
+        console.error('Error in visitor login:', error);
+        return {
+            success: false,
+            message: "An error occurred during visitor login."
+        };
+    }
+}
 
 
 /**create admin function */
@@ -101,12 +128,38 @@ async function register(reqUsername, reqPassword) {
       });
 }
 
+//create visitor function
+async function registerVisitor(name, icnumber, relationship, prisonerId, date, time) {
+  return visitorCollection.insertOne({
+      name,
+      icnumber,
+      relationship,
+      prisonerId,
+      date,
+      time
+  })
+  .then(() => {
+      return "Visitor registration successful!";
+  })
+  .catch(error => {
+      console.error('Visitor registration failed:', error);
+      return "Error encountered during visitor registration!";
+  });
+}
+
+
 function generateToken(userData) {
     const token = jwt.sign(userData, 'inipassword');
     return token
   
 }
 
+function generateVisitorToken(visitorData) {
+  const token = jwt.sign(visitorData, 'visitorpassword');
+  return token;
+}
+
+/*
 function verifyToken(req, res, next) {
     let header = req.headers.authorization;
   
@@ -136,6 +189,41 @@ function verifyToken(req, res, next) {
       next();
     });
   }
+*/
+
+function verifyToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  // Check if the Authorization header is present
+  if (!header) {
+      return res.status(401).send('Authorization header is missing');
+  }
+
+  // Split the header to extract the token
+  let tokenParts = header.split(' ');
+
+  // Check if the expected token format is present
+  if (tokenParts.length !== 2 || tokenParts[0].toLowerCase() !== 'bearer') {
+      return res.status(401).send('Invalid Authorization header format');
+  }
+
+  let token = tokenParts[1];
+
+  jwt.verify(token, 'inipassword', function (err, decoded) {
+      if (err) {
+          return res.status(401).send('Invalid Token');
+      }
+
+      req.user = decoded;
+
+      // Check the role in the decoded token
+      if (req.user.role === 'admin' || req.user.role === 'visitor') {
+          next();
+      } else {
+          return res.status(403).send('Unauthorized access');
+      }
+  });
+}
 
 
 // Login Admin
@@ -158,8 +246,47 @@ app.post('/login', (req, res) => {
     });
 });
 
+//visitor register
+app.post('/registervisitor', async (req, res) => {
+  const {
+      name,
+      icnumber,
+      relationship,
+      prisonerId,
+      date,
+      time
+  } = req.body;
+
+  try {
+      const result = await registerVisitor(name, icnumber, relationship, prisonerId, date, time);
+      res.send(result);
+  } catch (error) {
+      console.error('Error in visitor registration route:', error);
+      res.status(500).send("An error occurred during visitor registration.");
+  }
+});
+
+//visitor login
+app.post('/loginvisitor/:icnum', async (req, res) => {
+  const { icnum } = req.params;
+
+  try {
+      const result = await loginVisitor(icnum);
+      if (result.success) {
+          let token = generateVisitorToken(result.visitor);
+          res.send("Visitor Auth Token: " + token);
+      } else {
+          res.status(401).send(result.message);
+      }
+  } catch (error) {
+      console.error('Error in visitor login route:', error);
+      res.status(500).send("An error occurred during visitor login.");
+  }
+});
+
+
+/*
 // visitor pass
-// API endpoint for visitors pass
 app.post('/visitorspass/:icnum', async (req, res) => {
   const { icnum } = req.params;
 
@@ -170,7 +297,26 @@ app.post('/visitorspass/:icnum', async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+*/
 
+app.post('/visitorspass/:icnum', verifyToken, async (req, res) => {
+  const { icnum } = req.params;
+
+  try {
+      // Check the role in the decoded token
+      if (req.user.role === 'visitor') {
+          // Additional logic if needed for visitor access
+          const result = await visitorspass(icnum);
+          res.json(result);
+      } else {
+          // Admins can access this route
+          const result = await visitorspass(icnum);
+          res.json(result);
+      }
+  } catch (error) {
+      res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
 
 // Register Admin
 app.post('/register', verifyToken, (req, res) => {
