@@ -80,18 +80,17 @@
  *   post:
  *     summary: Login as a visitor.
  *     tags: [Visitor]
- *     parameters:
- *       - in: body
- *         name: RequestBody
- *         description: Visitor login details.
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             username:
- *               type: string
- *             password:
- *               type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successful login.
@@ -272,6 +271,8 @@
  *   post:
  *     summary: Get visitor pass details.
  *     tags: [VisitorPass]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: icnum
