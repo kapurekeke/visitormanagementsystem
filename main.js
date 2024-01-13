@@ -17,6 +17,8 @@
  *     description: Visitor operations
  *   - name: Prisoner
  *     description: Prisoner operations
+ *   - name: VisitorPass
+ *     description: Visitor pass operations
  * 
  */
 
@@ -269,7 +271,7 @@
  * /visitorspass/{icnum}:
  *   post:
  *     summary: Get visitor pass details.
- *     tags: [Visitor]
+ *     tags: [VisitorPass]
  *     parameters:
  *       - in: path
  *         name: icnum
@@ -311,7 +313,7 @@
  * /visitor/requestpass:
  *   post:
  *     summary: Submit a visitor pass request.
- *     tags: [Visitor]
+ *     tags: [VisitorPass]
  *     security:
  *       - BearerAuth: []
  *     parameters:
@@ -353,7 +355,7 @@
  * /admin/approvevisitorpass/{requestId}:
  *   put:
  *     summary: Approve or decline a visitor pass request.
- *     tags: [Auth]
+ *     tags: [VisitorPass]
  *     security:
  *       - BearerAuth: []
  *     parameters:
