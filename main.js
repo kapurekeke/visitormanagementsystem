@@ -72,74 +72,89 @@
  *         description: Internal server error
  */
 
-/** 
+/**
  * @swagger
- * /loginvisitor/{icnum}:
- *    post:
- *      summary: Visitor Login
- *      tags: [Visitor]
- *      description: Authenticate a visitor by IC number and generate a JWT token.
- *      parameters:
- *        - name: icnum
- *          in: path
- *          required: true
- *          description: IC number of the visitor
- *          schema:
- *            type: string
- *      responses:
- *        '200':
- *          description: Successful login
- *          content:
- *            application/json:
- *              example:
- *                success: true
- *                message: Visitor login successful!
- *                token: your_generated_token_here
- *        '401':
- *          description: Unauthorized
- *          content:
- *            application/json:
- *              example:
- *                success: false
- *                message: Visitor not found!
- *        '500':
- *          description: Internal server error
- *          content:
- *            application/json:
- *              example:
- *                success: false
- *                message: An error occurred during visitor login.
+ * /loginvisitor:
+ *   post:
+ *     summary: Login as a visitor.
+ *     tags: [Visitor]
+ *     parameters:
+ *       - in: body
+ *         name: RequestBody
+ *         description: Visitor login details.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *             password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Successful login.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               users:
+ *                 username: visitor123
+ *                 // Add other visitor details if needed
+ *       401:
+ *         description: Visitor not found or incorrect credentials.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Visitor not found or incorrect credentials.
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: An error occurred during visitor login.
  */
 
 /**
  * @swagger
- *  /registervisitor:
- *    post:
- *      summary: Visitor Registration
- *      tags: [Visitor]
- *      description: Register a new visitor.
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            example:
- *              name: Visitor Name
- *              icnumber: '123456789012'
- *              relationship: Friend
- *              prisonerId: PrisonerID123
- *              date: '2024-01-15'
- *              time: '14:30'
- *      responses:
- *        '200':
- *          description: Successful registration
- *          content:
- *            application/json:
- *              example: Visitor registration successful!
- *        '500':
- *          description: Internal server error
- *          content:
- *            application/json:
- *              example: An error occurred during visitor registration.
+ * /registervisitor:
+ *   post:
+ *     summary: Register as a visitor.
+ *     tags: [Visitor]
+ *     parameters:
+ *       - in: body
+ *         name: RequestBody
+ *         description: Visitor registration details.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             firstName:
+ *               type: string
+ *             lastName:
+ *               type: string
+ *             phoneNum:
+ *               type: string
+ *             username:
+ *               type: string
+ *             password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Successful registration.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Visitor registration successful!
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Error encountered during visitor registration!
  */
 
 /**
@@ -253,36 +268,131 @@
  * @swagger
  * /visitorspass/{icnum}:
  *   post:
- *     summary: Get Visitor Pass
+ *     summary: Get visitor pass details.
  *     tags: [Visitor]
  *     parameters:
  *       - in: path
  *         name: icnum
+ *         description: IC number of the visitor.
  *         required: true
  *         schema:
  *           type: string
- *         description: The IC number of the visitor pass
  *     responses:
- *       '200':
- *         description: Successful response
+ *       200:
+ *         description: Visitor pass details retrieved successfully.
  *         content:
  *           application/json:
  *             example:
  *               success: true
- *               user:
- *                 # Your user data structure here
- *       '404':
- *         description: Visitor pass not found
+ *               message:
+ *                 status: pending
+ *                 details:
+ *                   icnumber: visitor123
+ *                   // Add other visitor pass details if needed
+ *       404:
+ *         description: Visitor pass not found.
  *         content:
  *           application/json:
  *             example:
  *               success: false
  *               message: Visitor pass not found!
- *       '500':
- *         description: Internal Server Error
+ *       500:
+ *         description: Internal server error.
  *         content:
  *           application/json:
  *             example:
  *               success: false
  *               message: An error occurred.
+ */
+
+
+/**
+ * @swagger
+ * /visitor/requestpass:
+ *   post:
+ *     summary: Submit a visitor pass request.
+ *     tags: [Visitor]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: body
+ *         name: RequestBody
+ *         description: Visitor pass request details.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             icNum:
+ *               type: string
+ *             date:
+ *               type: string
+ *             time:
+ *               type: string
+ *             prisonerId:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Successful request submission.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Visitor pass request submitted successfully!
+ *               requestId: 1234567890
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: An error occurred while submitting the visitor pass request.
+ */
+
+/**
+ * @swagger
+ * /admin/approvevisitorpass/{requestId}:
+ *   put:
+ *     summary: Approve or decline a visitor pass request.
+ *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: requestId
+ *         description: ID of the visitor pass request.
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: RequestBody
+ *         description: Admin approval details.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             approvalStatus:
+ *               type: string
+ *               enum: ['approved', 'declined']
+ *     responses:
+ *       200:
+ *         description: Approval/decline successful.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Visitor pass request approved/declined successfully by admin.
+ *       404:
+ *         description: Visitor pass request not found.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Visitor pass request not found.
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal server error.
  */
