@@ -145,28 +145,29 @@ async function approveVisitorPass(requestId, approvalStatus) {
 
 //visitor login function
 async function visitorLogin(reqUsername, reqPassword) {
-  return visitorCollection.findOne({ username: reqUsername, password: reqPassword })
-    .then(matchedUsers => {
-      if (matchedUsers) {
-        return {
-          success: true,
-          users: matchedUsers,
-        };
-      } else {
-        return {
-          success: false,
-          message: "Visitor not found!",
-        };
-      }
-    })
-    .catch(error => {
-      console.error('Error in visitor login:', error);
+  try {
+    const matchedUsers = await visitorCollection.findOne({ username: reqUsername, password: reqPassword });
+
+    if (!matchedUsers) {
       return {
         success: false,
-        message: "An error occurred during visitor login.",
+        message: "Visitor not found!",
       };
-    });
+    } else {
+      return {
+        success: true,
+        users: matchedUsers,
+      };
+    }
+  } catch (error) {
+    console.error('Error in visitor login:', error);
+    return {
+      success: false,
+      message: "An error occurred during visitor login.",
+    };
+  }
 }
+
 
 
 /**create admin function */
