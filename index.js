@@ -268,7 +268,7 @@ async function checkVisitorPassStatus(visitorId) {
 // API Routes
 
 // Login Admin
-app.post('/login', verifyAdminToken, (req, res) => {
+app.post('/login', (req, res) => {
   let result = login(req.body.username, req.body.password);
   result.then(response => {
     if (response.success) {
@@ -284,7 +284,7 @@ app.post('/login', verifyAdminToken, (req, res) => {
 });
 
 // Register Admin
-app.post('/register', (req, res) => {
+app.post('/register', verifyAdminToken, (req, res) => {
   let result = register(req.body.username, req.body.password);
   result.then(response => {
     res.send(response);
