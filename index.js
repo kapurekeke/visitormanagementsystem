@@ -147,6 +147,13 @@ async function login(reqUsername, reqPassword) {
 // Function to register admin with hashed password using bcryptjs
 async function register(reqUsername, reqPassword) {
   try {
+    if (reqPassword.length < 8) {
+      return "Password must be at least 8 characters long."
+    }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+    if (!passwordRegex.test(reqPassword)) {
+      return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+    }
     const hashedPassword = await bcrypt.hash(reqPassword, 10); // 10 is the number of salt rounds
 
     await adminCollection.insertOne({
@@ -164,6 +171,13 @@ async function register(reqUsername, reqPassword) {
 // Function to register visitor with hashed password using bcryptjs
 async function registerVisitor(reqFirstName, reqLastName, reqPhoneNumber, reqUsername, reqPassword) {
   try {
+    if (reqPassword.length < 8) {
+      return "Password must be at least 8 characters long."
+    }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+    if (!passwordRegex.test(reqPassword)) {
+      return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+    }
     const hashedPassword = await bcrypt.hash(reqPassword, 10); // 10 is the number of salt rounds
 
     await visitorCollection.insertOne({
