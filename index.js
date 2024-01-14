@@ -7,6 +7,7 @@ const swaggerjsdoc = require('swagger-jsdoc');
 const app = express();
 const port = process.env.PORT || 3000;
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
 
 // MongoDB connection URL
 //const uri = "mongodb+srv://hajimu69:hAZimFAhm1kaYKaY24@cluster1.gljgb6e.mongodb.net/";
@@ -109,20 +110,29 @@ function generateVisitorToken(visitorData) {
   return token;
 }
 
-// Function to handle admin login
+// Function to handle admin login with password hashing
 async function login(reqUsername, reqPassword) {
   try {
-    const matchUsers = await adminCollection.findOne({ username: reqUsername, password: reqPassword });
+    const admin = await adminCollection.findOne({ username: reqUsername });
 
-    if (!matchUsers) {
+    if (!admin) {
       return {
         success: false,
         message: "Admin not found!",
       };
-    } else {
+    }
+
+    const passwordMatch = await bcrypt.compare(reqPassword, admin.password);
+
+    if (passwordMatch) {
       return {
         success: true,
-        users: matchUsers,
+        users: admin,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Invalid password!",
       };
     }
   } catch (error) {
@@ -134,12 +144,14 @@ async function login(reqUsername, reqPassword) {
   }
 }
 
-// Function to register admin
+// Function to register admin with hashed password
 async function register(reqUsername, reqPassword) {
   try {
+    const hashedPassword = await bcrypt.hash(reqPassword, 10); // 10 is the number of salt rounds
+
     await adminCollection.insertOne({
       username: reqUsername,
-      password: reqPassword,
+      password: hashedPassword,
     });
 
     return "Registration successful!";
@@ -149,15 +161,17 @@ async function register(reqUsername, reqPassword) {
   }
 }
 
-// Function to register visitor
+// Function to register visitor with hashed password
 async function registerVisitor(reqFirstName, reqLastName, reqPhoneNumber, reqUsername, reqPassword) {
   try {
+    const hashedPassword = await bcrypt.hash(reqPassword, 10); // 10 is the number of salt rounds
+
     await visitorCollection.insertOne({
       firstName: reqFirstName,
       lastName: reqLastName,
       phoneNumber: reqPhoneNumber,
       username: reqUsername,
-      password: reqPassword,
+      password: hashedPassword,
     });
 
     return "Visitor registration successful!";
@@ -167,20 +181,29 @@ async function registerVisitor(reqFirstName, reqLastName, reqPhoneNumber, reqUse
   }
 }
 
-// Function to handle visitor login
+// Function to handle visitor login with password hashing
 async function loginVisitor(reqUsername, reqPassword) {
   try {
-    const matchVisitors = await visitorCollection.findOne({ username: reqUsername, password: reqPassword });
+    const visitor = await visitorCollection.findOne({ username: reqUsername });
 
-    if (!matchVisitors) {
+    if (!visitor) {
       return {
         success: false,
         message: "Visitor not found!",
       };
-    } else {
+    }
+
+    const passwordMatch = await bcrypt.compare(reqPassword, visitor.password);
+
+    if (passwordMatch) {
       return {
         success: true,
-        visitors: matchVisitors,
+        visitors: visitor,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Invalid password!",
       };
     }
   } catch (error) {
@@ -295,7 +318,7 @@ app.post('/login', (req, res) => {
 });
 
 // Register Admin
-app.post('/register', verifyAdminToken, (req, res) => {
+app.post('/register', (req, res) => {
   let result = register(req.body.username, req.body.password);
   result.then(response => {
     res.send(response);
