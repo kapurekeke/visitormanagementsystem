@@ -7,7 +7,7 @@ const swaggerjsdoc = require('swagger-jsdoc');
 const app = express();
 const port = process.env.PORT || 3000;
 const { ObjectId } = require('mongodb');
-const argon2 = require('argon2');
+const bcrypt = require('bcryptjs');
 
 // MongoDB connection URL
 //const uri = "mongodb+srv://hajimu69:hAZimFAhm1kaYKaY24@cluster1.gljgb6e.mongodb.net/";
@@ -110,7 +110,7 @@ function generateVisitorToken(visitorData) {
   return token;
 }
 
-// Function to handle admin login with password hashing using argon2
+// Function to handle admin login with password hashing using bcryptjs
 async function login(reqUsername, reqPassword) {
   try {
     const admin = await adminCollection.findOne({ username: reqUsername });
@@ -122,7 +122,7 @@ async function login(reqUsername, reqPassword) {
       };
     }
 
-    const passwordMatch = await argon2.verify(admin.password, reqPassword);
+    const passwordMatch = await bcrypt.compare(reqPassword, admin.password);
 
     if (passwordMatch) {
       return {
@@ -144,10 +144,10 @@ async function login(reqUsername, reqPassword) {
   }
 }
 
-// Function to register admin with hashed password using argon2
+// Function to register admin with hashed password using bcryptjs
 async function register(reqUsername, reqPassword) {
   try {
-    const hashedPassword = await argon2.hash(reqPassword);
+    const hashedPassword = await bcrypt.hash(reqPassword, 10); // 10 is the number of salt rounds
 
     await adminCollection.insertOne({
       username: reqUsername,
@@ -161,10 +161,10 @@ async function register(reqUsername, reqPassword) {
   }
 }
 
-// Function to register visitor with hashed password using argon2
+// Function to register visitor with hashed password using bcryptjs
 async function registerVisitor(reqFirstName, reqLastName, reqPhoneNumber, reqUsername, reqPassword) {
   try {
-    const hashedPassword = await argon2.hash(reqPassword);
+    const hashedPassword = await bcrypt.hash(reqPassword, 10); // 10 is the number of salt rounds
 
     await visitorCollection.insertOne({
       firstName: reqFirstName,
@@ -181,7 +181,7 @@ async function registerVisitor(reqFirstName, reqLastName, reqPhoneNumber, reqUse
   }
 }
 
-// Function to handle visitor login with password hashing using argon2
+// Function to handle visitor login with password hashing using bcryptjs
 async function loginVisitor(reqUsername, reqPassword) {
   try {
     const visitor = await visitorCollection.findOne({ username: reqUsername });
@@ -193,7 +193,7 @@ async function loginVisitor(reqUsername, reqPassword) {
       };
     }
 
-    const passwordMatch = await argon2.verify(visitor.password, reqPassword);
+    const passwordMatch = await bcrypt.compare(reqPassword, visitor.password);
 
     if (passwordMatch) {
       return {
