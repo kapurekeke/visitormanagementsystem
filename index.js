@@ -6,6 +6,7 @@ const swaggerjsdoc = require('swagger-jsdoc');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const { ObjectId } = require('mongodb');
 
 // MongoDB connection URL
 //const uri = "mongodb+srv://hajimu69:hAZimFAhm1kaYKaY24@cluster1.gljgb6e.mongodb.net/";
@@ -212,7 +213,8 @@ async function requestVisitorPass(visitorId, reason) {
 async function approveDenyVisitorPass(passId, decision) {
   try {
     // Assuming you have a collection named 'visitorPass' to store pass requests
-    const pass = await db.collection('visitorPass').findOne({ _id: passId });
+    const passObjectId = new ObjectId(passId);
+    const pass = await db.collection('visitorPass').findOne({ _id: passObjectId });
 
     if (!pass) {
       return {
@@ -222,7 +224,7 @@ async function approveDenyVisitorPass(passId, decision) {
     }
 
     const updatedPass = await db.collection('visitorPass').findOneAndUpdate(
-      { _id: passId },
+      { _id: passObjectId },
       { $set: { status: decision } },
       { returnDocument: 'after' }
     );
