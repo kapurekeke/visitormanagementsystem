@@ -223,23 +223,22 @@ async function approveDenyVisitorPass(passId, decision) {
       };
     }
 
-    const updatedPass = await db.collection('visitorPass').findOneAndUpdate(
+    const updateResult = await db.collection('visitorPass').updateOne(
       { _id: passObjectId },
-      { $set: { status: decision } },
-      { returnDocument: 'after' }
+      { $set: { status: decision } }
     );
 
-    if (!updatedPass.value) {
+    if (updateResult.matchedCount === 1) {
+      return {
+        success: true,
+        message: `Visitor pass ${decision.toLowerCase()} successfully!`,
+      };
+    } else {
       return {
         success: false,
         message: "Error updating visitor pass status!",
       };
     }
-
-    return {
-      success: true,
-      message: `Visitor pass ${decision.toLowerCase()} successfully!`,
-    };
   } catch (error) {
     console.error('Error in approving/denying visitor pass:', error);
     return {
