@@ -6,6 +6,7 @@ const swaggerjsdoc = require('swagger-jsdoc');
 
 const app = express();
 const port = process.env.PORT || 8080;
+server.listen(port);
 const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 
