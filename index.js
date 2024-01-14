@@ -420,7 +420,7 @@ app.get('/checkpassstatus', verifyVisitorToken, (req, res) => {
 // View all visitor pass requests
 app.get('/visitorpass', verifyAdminToken, async (req, res) => {
   try {
-    const visitorpass = await db.collection('visiorPass').find().toArray();
+    const visitorpass = await db.collection('visitorPass').find().toArray();
     res.send(visitorpass);
   } catch (error) {
     res.status(500).send('Error viewing visitor pass requests');
