@@ -8,8 +8,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // MongoDB connection URL
-const uri = "mongodb+srv://hajimu69:hAZimFAhm1kaYKaY24@cluster1.gljgb6e.mongodb.net/";
-//const uri = "mongodb+srv://b022120050:hazim123456789@cluster0.jfboppa.mongodb.net/";
+//const uri = "mongodb+srv://hajimu69:hAZimFAhm1kaYKaY24@cluster1.gljgb6e.mongodb.net/";
+const uri = "mongodb+srv://b022120050:hazim123456789@cluster0.jfboppa.mongodb.net/";
 
 // Create a new MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }, {
@@ -211,7 +211,7 @@ app.post('/login', (req, res) => {
 });
 
 // Register Admin
-app.post('/register', verifyAdminToken, (req, res) => {
+app.post('/register', (req, res) => {
   let result = register(req.body.username, req.body.password);
   result.then(response => {
     res.send(response);
