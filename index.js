@@ -8,7 +8,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // MongoDB connection URL
-const uri = "mongodb+srv://hajimu69:hAZimFAhm1kaYKaY24@cluster1.gljgb6e.mongodb.net/";
+//const uri = "mongodb+srv://hajimu69:hAZimFAhm1kaYKaY24@cluster1.gljgb6e.mongodb.net/";
+const uri = "mongodb+srv://b022120050:hazim123456789@cluster0.jfboppa.mongodb.net/";
 
 // Create a new MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }, {
@@ -37,8 +38,8 @@ const prisonerCollection = db.collection('prisoner');
 // Middleware to parse JSON
 app.use(express.json());
 
-// Authentication middleware
-function verifyToken(req, res, next) {
+// Admin Authentication middleware
+function verifyAdminToken(req, res, next) {
   let header = req.headers.authorization;
 
   // Check if the Authorization header is present
@@ -56,7 +57,7 @@ function verifyToken(req, res, next) {
 
   let token = tokenParts[1];
 
-  jwt.verify(token, 'inipassword', function (err, decoded) {
+  jwt.verify(token, 'adminpassword', function (err, decoded) {
     if (err) {
       return res.status(401).send('Invalid Token');
     }
@@ -66,9 +67,44 @@ function verifyToken(req, res, next) {
   });
 }
 
-// Function to generate JWT token
-function generateToken(userData) {
-  const token = jwt.sign(userData, 'inipassword');
+// Visitor Authentication middleware
+function verifyVisitorToken(req, res, next) {
+  let header = req.headers.authorization;
+
+  // Check if the Authorization header is present
+  if (!header) {
+    return res.status(401).send('Authorization header is missing');
+  }
+
+  // Split the header to extract the token
+  let tokenParts = header.split(' ');
+
+  // Check if the expected token format is present
+  if (tokenParts.length !== 2 || tokenParts[0].toLowerCase() !== 'bearer') {
+    return res.status(401).send('Invalid Authorization header format');
+  }
+
+  let token = tokenParts[1];
+
+  jwt.verify(token, 'visitorpassword', function (err, decoded) {
+    if (err) {
+      return res.status(401).send('Invalid Token');
+    }
+
+    req.user = decoded;
+    next();
+  });
+}
+
+// Function to generate admin JWT token
+function generateAdminToken(userData) {
+  const token = jwt.sign(userData, 'adminpassword');
+  return token;
+}
+
+// Function to generate visitor token
+function generateVisitorToken(visitorData) {
+  const token = jwt.sign(visitorData, 'visitorpassword');
   return token;
 }
 
@@ -97,31 +133,6 @@ async function login(reqUsername, reqPassword) {
   }
 }
 
-// Function to check visitor pass
-async function visitorspass(reqicnum) {
-  try {
-    const matchedUser = await visitorCollection.findOne({ icnumber: reqicnum });
-
-    if (matchedUser) {
-      return {
-        success: true,
-        message: matchedUser,
-      };
-    } else {
-      return {
-        success: false,
-        user: "Visitor pass not found!",
-      };
-    }
-  } catch (error) {
-    console.error('Error in finding visitor pass:', error);
-    return {
-      success: false,
-      message: "An error occurred.",
-    };
-  }
-}
-
 // Function to register admin
 async function register(reqUsername, reqPassword) {
   try {
@@ -137,6 +148,50 @@ async function register(reqUsername, reqPassword) {
   }
 }
 
+// Function to register visitor
+async function registerVisitor(reqFirstName, reqLastName, reqPhoneNumber, reqUsername, reqPassword) {
+  try {
+    await visitorCollection.insertOne({
+      firstName: reqFirstName,
+      lastName: reqLastName,
+      phoneNumber: reqPhoneNumber,
+      username: reqUsername,
+      password: reqPassword,
+    });
+
+    return "Visitor registration successful!";
+  } catch (error) {
+    console.error('Visitor registration failed:', error);
+    return "Error encountered during visitor registration!";
+  }
+}
+
+// Function to handle visitor login
+async function loginVisitor(reqUsername, reqPassword) {
+  try {
+    const matchVisitors = await visitorCollection.findOne({ username: reqUsername, password: reqPassword });
+
+    if (!matchVisitors) {
+      return {
+        success: false,
+        message: "Visitor not found!",
+      };
+    } else {
+      return {
+        success: true,
+        visitors: matchVisitors,
+      };
+    }
+  } catch (error) {
+    console.error('Error in visitor login:', error);
+    return {
+      success: false,
+      message: "An error occurred during visitor login.",
+    };
+  }
+}
+
+
 // API Routes
 
 // Login Admin
@@ -144,8 +199,8 @@ app.post('/login', (req, res) => {
   let result = login(req.body.username, req.body.password);
   result.then(response => {
     if (response.success) {
-      let token = generateToken(response.users);
-      res.send("Auth Token: " + token);
+      let token = generateAdminToken(response.users);
+      res.send("Admin Auth Token: " + token);
     } else {
       res.status(401).send(response.message);
     }
@@ -156,7 +211,7 @@ app.post('/login', (req, res) => {
 });
 
 // Register Admin
-app.post('/register', verifyToken, (req, res) => {
+app.post('/register', verifyAdminToken, (req, res) => {
   let result = register(req.body.username, req.body.password);
   result.then(response => {
     res.send(response);
@@ -166,36 +221,36 @@ app.post('/register', verifyToken, (req, res) => {
   });
 });
 
-//visitors pass
-app.post('/visitorspass/:icnum', async (req, res) => {
-  const { icnum } = req.params;
-
-  try {
-    const result = await visitorspass(icnum);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
+// Register Visitor
+app.post('/registervisitor', (req, res) => {
+  let result = registerVisitor(req.body.firstName, req.body.lastName, req.body.phoneNumber, req.body.username, req.body.password);
+  result.then(response => {
+    res.send(response);
+  }).catch(error => {
+    console.error('Error in registervisitor route:', error);
+    res.status(500).send("An error occurred during visitor registration.");
+  });
 });
 
-
-// Add a visitor
-app.post('/addvisitor', verifyToken, (req, res) => {
-  const { name, icnumber, relationship, prisonerId, date, time } = req.body;
-  const visitorData = { name, icnumber, relationship, prisonerId, date, time };
-
-  visitorCollection.insertOne(visitorData)
-    .then(() => {
-      res.send(visitorData);
-    })
-    .catch((error) => {
-      console.error('Error adding visitor:', error);
-      res.status(500).send('An error occurred while adding the visitor');
-    });
+// Login Visitor
+app.post('/loginvisitor', (req, res) => {
+  let result = loginVisitor(req.body.username, req.body.password);
+  result.then(response => {
+    if (response.success) {
+      let token = generateVisitorToken(response.visitors);
+      res.send("Visitor Auth Token: " + token);
+    } else {
+      res.status(401).send(response.message);
+    }
+  }).catch(error => {
+    console.error('Error in loginvisitor route:', error);
+    res.status(500).send("An error occurred during visitor login.");
+  });
 });
+
 
 // Add a prisoner
-app.post('/addprisoner', verifyToken, (req, res) => {
+app.post('/addprisoner', verifyAdminToken, (req, res) => {
   const { name, icnumber, prisonerId } = req.body;
   const prisonerData = { name, icnumber, prisonerId };
 
@@ -210,7 +265,7 @@ app.post('/addprisoner', verifyToken, (req, res) => {
 });
 
 // View all visitors
-app.get('/visitors', verifyToken, async (req, res) => {
+app.get('/visitors', verifyAdminToken, async (req, res) => {
   try {
     const prisoner = await db.collection('visitor').find().toArray();
     res.send(prisoner);
@@ -220,7 +275,7 @@ app.get('/visitors', verifyToken, async (req, res) => {
 });
 
 // View all prisoner
-app.get('/prisoner', verifyToken, async (req, res) => {
+app.get('/prisoner', verifyAdminToken, async (req, res) => {
   try {
     const prisoner = await db.collection('prisoner').find().toArray();
     res.send(prisoner);

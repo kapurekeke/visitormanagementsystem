@@ -74,50 +74,62 @@
 
 /**
  * @swagger
- * components:
- *   securitySchemes:
- *     BearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- * 
- * security:
- *   - BearerAuth: []
- * 
- * paths:
- *  /addvisitor:
- *    post:
- *     summary: Add a visitor
+ * /registervisitor:
+ *   post:
+ *     summary: Register a new visitor
  *     tags: [Visitor]
- *     security:
- *       - BearerAuth: []
  *     requestBody:
+ *       description: Visitor registration details
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               firstName:
  *                 type: string
- *               icnumber:
+ *               lastName:
  *                 type: string
- *               relationship:
+ *               phoneNumber:
  *                 type: string
- *               prisonerId:
+ *               username:
  *                 type: string
- *               date:
- *                 type: string
- *               time:
+ *               password:
  *                 type: string
  *     responses:
- *       200:
- *         description: Visitor added successfully
- *       401:
- *         description: Unauthorized - Invalid token
- *       500:
+ *       '200':
+ *         description: Successful registration
+ *       '500':
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /loginvisitor:
+ *   post:
+ *     summary: Login as a visitor
+ *     tags: [Visitor]
+ *     requestBody:
+ *       description: Visitor login details
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Successful login
+ *       '401':
+ *         description: Unauthorized - Invalid credentials
+ *       '500':
+ *         description: Internal server error
+ */
+
 
 /**
  * @swagger
@@ -179,40 +191,3 @@
  *         description: Internal server error
  */
 
-/**
- * @swagger
- * /visitorspass/{icnum}:
- *   post:
- *     summary: Get Visitor Pass Information
- *     tags: [Visitor]
- *     parameters:
- *       - in: path
- *         name: icnum
- *         required: true
- *         schema:
- *           type: string
- *         description: The IC number of the visitor pass
- *     responses:
- *       '200':
- *         description: Successful response
- *         content:
- *           application/json:
- *             example:
- *               success: true
- *               user:
- *                 # Your user data structure here
- *       '404':
- *         description: Visitor pass not found
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: Visitor pass not found!
- *       '500':
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: An error occurred.
- */
