@@ -59,7 +59,7 @@ function verifyAdminToken(req, res, next) {
 
   let token = tokenParts[1];
 
-  jwt.verify(token, 'adminpassword', function (err, decoded) {
+  jwt.verify(token, '@dMinp@ssw0RD', function (err, decoded) {
     if (err) {
       return res.status(401).send('Invalid Token');
     }
@@ -88,7 +88,7 @@ function verifyVisitorToken(req, res, next) {
 
   let token = tokenParts[1];
 
-  jwt.verify(token, 'visitorpassword', function (err, decoded) {
+  jwt.verify(token, 'vISit0rP@@sw0rd', function (err, decoded) {
     if (err) {
       return res.status(401).send('Invalid Token');
     }
@@ -100,13 +100,13 @@ function verifyVisitorToken(req, res, next) {
 
 // Function to generate admin JWT token
 function generateAdminToken(userData) {
-  const token = jwt.sign(userData, 'adminpassword');
+  const token = jwt.sign(userData, '@dMinp@ssw0RD');
   return token;
 }
 
 // Function to generate visitor token
 function generateVisitorToken(visitorData) {
-  const token = jwt.sign(visitorData, 'visitorpassword');
+  const token = jwt.sign(visitorData, 'vISit0rP@@sw0rd');
   return token;
 }
 
