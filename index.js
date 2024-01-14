@@ -318,7 +318,7 @@ app.post('/login', (req, res) => {
 });
 
 // Register Admin
-app.post('/register', (req, res) => {
+app.post('/register', verifyAdminToken, (req, res) => {
   let result = register(req.body.username, req.body.password);
   result.then(response => {
     res.send(response);
