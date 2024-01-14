@@ -191,11 +191,84 @@ async function loginVisitor(reqUsername, reqPassword) {
   }
 }
 
+// Function to handle visitor pass request
+async function requestVisitorPass(visitorId, reason) {
+  try {
+    // Assuming you have a collection named 'visitorPass' to store pass requests
+    await db.collection('visitorPass').insertOne({
+      visitorId,
+      reason,
+      status: 'Pending', // Initial status when requested
+    });
+
+    return "Visitor pass request submitted successfully!";
+  } catch (error) {
+    console.error('Error in requesting visitor pass:', error);
+    return "Error encountered during visitor pass request!";
+  }
+}
+
+// Function to handle admin approval or denial of visitor pass
+async function approveDenyVisitorPass(passId, decision) {
+  try {
+    // Assuming you have a collection named 'visitorPass' to store pass requests
+    const pass = await db.collection('visitorPass').findOneAndUpdate(
+      { _id: passId },
+      { $set: { status: decision } },
+      { returnDocument: 'after' }
+    );
+
+    if (!pass.value) {
+      return {
+        success: false,
+        message: "Visitor pass not found!",
+      };
+    }
+
+    return {
+      success: true,
+      message: `Visitor pass ${decision.toLowerCase()} successfully!`,
+    };
+  } catch (error) {
+    console.error('Error in approving/denying visitor pass:', error);
+    return {
+      success: false,
+      message: "An error occurred during approval/denial of visitor pass.",
+    };
+  }
+}
+
+// Function to check the status of visitor pass
+async function checkVisitorPassStatus(visitorId) {
+  try {
+    // Assuming you have a collection named 'visitorPass' to store pass requests
+    const pass = await db.collection('visitorPass').findOne({ visitorId });
+
+    if (!pass) {
+      return {
+        success: false,
+        message: "Visitor pass not found!",
+      };
+    }
+
+    return {
+      success: true,
+      status: pass.status,
+    };
+  } catch (error) {
+    console.error('Error in checking visitor pass status:', error);
+    return {
+      success: false,
+      message: "An error occurred during the status check of visitor pass.",
+    };
+  }
+}
+
 
 // API Routes
 
 // Login Admin
-app.post('/login', (req, res) => {
+app.post('/login', verifyAdminToken, (req, res) => {
   let result = login(req.body.username, req.body.password);
   result.then(response => {
     if (response.success) {
@@ -282,6 +355,55 @@ app.get('/prisoner', verifyAdminToken, async (req, res) => {
   } catch (error) {
     res.status(500).send('Error viewing prisoner');
   }
+});
+
+// API to request a visitor pass
+app.post('/requestpass', verifyVisitorToken, (req, res) => {
+  const { reason } = req.body;
+  const visitorId = req.user._id; // Assuming visitor information is stored in the token
+
+  let result = requestVisitorPass(visitorId, reason);
+  result.then(response => {
+    res.send(response);
+  }).catch(error => {
+    console.error('Error in requestpass route:', error);
+    res.status(500).send("An error occurred during visitor pass request.");
+  });
+});
+
+// API to approve or deny a visitor pass
+app.post('/approvedenypass/:passId', verifyAdminToken, (req, res) => {
+  const { decision } = req.body;
+  const passId = req.params.passId;
+
+  let result = approveDenyVisitorPass(passId, decision);
+  result.then(response => {
+    if (response.success) {
+      res.send(response.message);
+    } else {
+      res.status(404).send(response.message);
+    }
+  }).catch(error => {
+    console.error('Error in approvedenypass route:', error);
+    res.status(500).send("An error occurred during approval/denial of visitor pass.");
+  });
+});
+
+// API to check the status of a visitor pass
+app.get('/checkpassstatus', verifyVisitorToken, (req, res) => {
+  const visitorId = req.user._id; // Assuming visitor information is stored in the token
+
+  let result = checkVisitorPassStatus(visitorId);
+  result.then(response => {
+    if (response.success) {
+      res.send(`Visitor pass status: ${response.status}`);
+    } else {
+      res.status(404).send(response.message);
+    }
+  }).catch(error => {
+    console.error('Error in checkpassstatus route:', error);
+    res.status(500).send("An error occurred during the status check of visitor pass.");
+  });
 });
 
 // Swagger Documentation

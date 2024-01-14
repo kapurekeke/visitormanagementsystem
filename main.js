@@ -17,6 +17,8 @@
  *     description: Visitor operations
  *   - name: Prisoner
  *     description: Prisoner operations
+ *   - name: VisitorPass
+ *     description: Visitor pass operations
  * 
  */
 
@@ -52,6 +54,8 @@
  *   post:
  *     summary: Register a new admin
  *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -189,3 +193,87 @@
  *         description: Internal server error
  */
 
+/**
+ * @swagger
+ * /requestpass:
+ *   post:
+ *     summary: Request a visitor pass.
+ *     description: Allows a visitor to request a pass.
+ *     tags: [VisitorPass]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *             required:
+ *               - reason
+ *     responses:
+ *       200:
+ *         description: Success message.
+ *       401:
+ *         description: Unauthorized. Invalid or missing token.
+ *       500:
+ *         description: Internal server error.
+ */
+
+/**
+ * @swagger
+ * /approvedenypass/{passId}:
+ *   post:
+ *     summary: Approve or deny a visitor pass.
+ *     description: Allows an admin to approve or deny a visitor pass.
+ *     tags: [VisitorPass]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: passId
+ *         in: path
+ *         description: ID of the visitor pass to be approved or denied.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               decision:
+ *                 type: string
+ *             required:
+ *               - decision
+ *     responses:
+ *       200:
+ *         description: Success message.
+ *       401:
+ *         description: Unauthorized. Invalid or missing token.
+ *       404:
+ *         description: Visitor pass not found.
+ *       500:
+ *         description: Internal server error.
+ */
+
+/**
+ * @swagger
+ * /checkpassstatus:
+ *   get:
+ *     summary: Check the status of a visitor pass.
+ *     description: Allows a visitor to check the status of their pass.
+ *     tags: [VisitorPass]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Visitor pass status.
+ *       401:
+ *         description: Unauthorized. Invalid or missing token.
+ *       404:
+ *         description: Visitor pass not found.
+ *       500:
+ *         description: Internal server error.
+ */
