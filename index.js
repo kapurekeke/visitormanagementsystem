@@ -5,8 +5,7 @@ const jwt = require('jsonwebtoken');
 const swaggerjsdoc = require('swagger-jsdoc');
 
 const app = express();
-const port = process.env.PORT || 8080;
-server.listen(port);
+const port = process.env.PORT || 3000;
 const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 
