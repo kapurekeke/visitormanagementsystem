@@ -277,3 +277,18 @@
  *       500:
  *         description: Internal server error.
  */
+
+/**
+ * @swagger
+ * /visitorpass:
+ *   get:
+ *     summary: View all visitors pass requests
+ *     tags: [VisitorPass]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of visitors pass requests
+ *       500:
+ *         description: Internal server error
+ */

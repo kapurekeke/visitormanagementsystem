@@ -351,8 +351,8 @@ app.post('/addprisoner', verifyAdminToken, (req, res) => {
 // View all visitors
 app.get('/visitors', verifyAdminToken, async (req, res) => {
   try {
-    const prisoner = await db.collection('visitor').find().toArray();
-    res.send(prisoner);
+    const visitor = await db.collection('visitor').find().toArray();
+    res.send(visitor);
   } catch (error) {
     res.status(500).send('Error viewing visitors');
   }
@@ -415,6 +415,16 @@ app.get('/checkpassstatus', verifyVisitorToken, (req, res) => {
     console.error('Error in checkpassstatus route:', error);
     res.status(500).send("An error occurred during the status check of visitor pass.");
   });
+});
+
+// View all visitor pass requests
+app.get('/visitorpass', verifyAdminToken, async (req, res) => {
+  try {
+    const visitorpass = await db.collection('visiorPass').find().toArray();
+    res.send(visitorpass);
+  } catch (error) {
+    res.status(500).send('Error viewing visitor pass requests');
+  }
 });
 
 // Swagger Documentation
