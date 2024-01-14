@@ -212,16 +212,25 @@ async function requestVisitorPass(visitorId, reason) {
 async function approveDenyVisitorPass(passId, decision) {
   try {
     // Assuming you have a collection named 'visitorPass' to store pass requests
-    const pass = await db.collection('visitorPass').findOneAndUpdate(
+    const pass = await db.collection('visitorPass').findOne({ _id: passId });
+
+    if (!pass) {
+      return {
+        success: false,
+        message: "Visitor pass not found!",
+      };
+    }
+
+    const updatedPass = await db.collection('visitorPass').findOneAndUpdate(
       { _id: passId },
       { $set: { status: decision } },
       { returnDocument: 'after' }
     );
 
-    if (!pass.value) {
+    if (!updatedPass.value) {
       return {
         success: false,
-        message: "Visitor pass not found!",
+        message: "Error updating visitor pass status!",
       };
     }
 
@@ -237,6 +246,7 @@ async function approveDenyVisitorPass(passId, decision) {
     };
   }
 }
+
 
 // Function to check the status of visitor pass
 async function checkVisitorPassStatus(visitorId) {
